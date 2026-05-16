@@ -1,69 +1,52 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-import { Menu, X, ShieldCheck } from 'lucide-vue-next';
+import { ref, onMounted, onUnmounted } from 'vue'
+import { Menu, X } from 'lucide-vue-next'
+import logoHero from '@/assets/Images/logo_hero.webp'
 
-/** * 1. IMPORTACIÓN DE IMÁGENES (Opción A - La más recomendada)
- * Al importarlas así, Vite las optimiza y evita errores de ruta en GitHub Pages.
- */
-import logoHero from '@/assets/Images/logo_hero.webp';
+/* ===============================
+   WHATSAPP – COTIZAR AHORA
+   =============================== */
+const whatsappNumber = '573235909225' // 🔴 número real, sin +
+const whatsappMessage = encodeURIComponent(
+  'Hola, quiero recibir información para poder agendar una cotización'
+)
+
+const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${whatsappMessage}`
 
 
-// --- ESTADO DEL FORMULARIO Y POLÍTICA ---
-const formData = ref({
-  nombre: '', empresa: '', email: '', ciudad: '', celular: '', mensaje: ''
-});
-const acceptedPolicy = ref(false);
-const showPolicy = ref(false);
-const policyError = ref(false);
-
-const handleSubmit = () => {
-  if (!acceptedPolicy.value) {
-    policyError.value = true;
-    return;
-  }
-  policyError.value = false;
-  console.log('Formulario enviado:', formData.value);
-  alert('Gracias por contactarnos.');
-};
-
-const acceptPolicy = () => {
-  acceptedPolicy.value = true;
-  policyError.value = false;
-  showPolicy.value = false;
-};
-
-// --- ESTADO REACTIVO NAVEGACIÓN ---
-const isScrolled = ref(false);
-const isMenuOpen = ref(false);
+/* ===============================
+   NAVEGACIÓN
+   =============================== */
+const isScrolled = ref(false)
+const isMenuOpen = ref(false)
 
 const navLinks = [
   { name: 'Inicio', href: '#' },
   { name: 'Servicios', href: '#servicios' },
   { name: 'Proceso', href: '#Proceso' },
-  { name: 'Acreditación', href: '#acreditacion' },
-  { name: 'Contacto', href: '#contacto' },
-];
+  { name: 'Acreditación', href: '#acredita' },
+  { name: 'Contacto', href: '#contacto' }
+]
 
-// Lógica de Scroll
 const handleScroll = () => {
-  isScrolled.value = window.scrollY > 20;
-};
+  isScrolled.value = window.scrollY > 20
+}
 
 onMounted(() => {
-  window.addEventListener('scroll', handleScroll);
-});
+  window.addEventListener('scroll', handleScroll)
+})
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
-});
+  window.removeEventListener('scroll', handleScroll)
+})
 
 const closeMenu = () => {
-  isMenuOpen.value = false;
-};
+  isMenuOpen.value = false
+}
 </script>
 
 <template>
-  <nav 
+  <nav
     :class="[
       'fixed w-full z-50 transition-all duration-300',
       isScrolled ? 'bg-white shadow-md py-3' : 'bg-transparent py-5'
@@ -73,25 +56,27 @@ const closeMenu = () => {
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center">
-        
+        <!-- LOGO -->
         <div class="flex items-center gap-2">
           <a href="/" class="flex items-center">
-            <img 
+            <img
               :src="logoHero"
-              alt="Certifix S.A.S Logo" 
-              class="h-15 w-auto object-contain transition-transform duration-300 hover:scale-105"
+              alt="Certifix S.A.S Logo"
+              class="h-23 w-auto object-contain transition-transform duration-300 hover:scale-105"
             />
           </a>
 
-          
-          <span :class="[
-            'text-2xl font-black tracking-tighter transition-colors',
-            isScrolled ? 'text-teal-900' : 'text-white'
-          ]">
+          <span
+            :class="[
+              'text-2xl font-black tracking-tighter transition-colors',
+              isScrolled ? 'text-teal-900' : 'text-white'
+            ]"
+          >
             CERTIFIX <span class="text-teal-600">S.A.S</span>
           </span>
         </div>
 
+        <!-- DESKTOP -->
         <div class="hidden md:flex items-center gap-8">
           <a
             v-for="link in navLinks"
@@ -104,16 +89,22 @@ const closeMenu = () => {
           >
             {{ link.name }}
           </a>
-          <a 
-            href="#contacto" 
+
+          <!-- BOTÓN WHATSAPP -->
+          <a
+            :href="whatsappLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Cotizar ahora por WhatsApp"
             class="bg-teal-700 hover:bg-teal-800 text-white px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-md"
           >
             COTIZAR AHORA
           </a>
         </div>
 
+        <!-- MOBILE ICON -->
         <div class="md:hidden">
-          <button 
+          <button
             @click="isMenuOpen = !isMenuOpen"
             :class="[isScrolled ? 'text-gray-900' : 'text-white', 'p-2 focus:outline-none']"
             :aria-expanded="isMenuOpen"
@@ -126,6 +117,7 @@ const closeMenu = () => {
       </div>
     </div>
 
+    <!-- MOBILE MENU -->
     <transition
       enter-active-class="transition duration-300 ease-out"
       enter-from-class="transform -translate-y-4 opacity-0"
@@ -134,7 +126,10 @@ const closeMenu = () => {
       leave-from-class="transform translate-y-0 opacity-100"
       leave-to-class="transform -translate-y-4 opacity-0"
     >
-      <div v-if="isMenuOpen" class="md:hidden absolute top-full left-0 w-full bg-white shadow-xl">
+      <div
+        v-if="isMenuOpen"
+        class="md:hidden absolute top-full left-0 w-full bg-white shadow-xl"
+      >
         <div class="flex flex-col p-6 space-y-4">
           <a
             v-for="link in navLinks"
@@ -145,8 +140,13 @@ const closeMenu = () => {
           >
             {{ link.name }}
           </a>
-          <a 
-            href="#contacto" 
+
+          <!-- BOTÓN WHATSAPP MOBILE -->
+          <a
+            :href="whatsappLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Cotizar ahora por WhatsApp"
             @click="closeMenu"
             class="bg-teal-700 text-white text-center py-4 rounded-xl font-bold"
           >

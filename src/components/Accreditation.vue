@@ -1,19 +1,7 @@
-<script setup>
-/**
- * Componente de Acreditación ONAC - CERTIFIX S.A.S
- * Migrado a Vue 3 con enfoque en SEO y consistencia visual.
- */
-
-const accreditationPoints = [
-  "Cumplimiento Resolución No. 40198 de 2021",
-  "Certificado vigente 2025 - 2028",
-  "Sistemas de gestión de calidad auditados",
-  "Independencia e imparcialidad garantizada"
-];
-</script>
-
 <template>
-  <section id="acreditacion" class="py-24 bg-teal-50/50 relative z-10" aria-labelledby="accreditation-title">
+  <section id="acredita" 
+          class="py-32 bg-teal-50/50 relative z-10 scroll-mt-28" 
+          aria-labelledby="accreditation-title">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="bg-white rounded-[3rem] shadow-2xl overflow-hidden flex flex-col lg:flex-row border border-teal-100">
         
@@ -47,7 +35,7 @@ const accreditationPoints = [
 
           <div class="pt-6 flex items-center gap-6">
              <img 
-               src="https://onac.org.co/wp-content/uploads/2021/08/logo-onac-horizontal.png" 
+               :src="logoOnac" 
                alt="Acreditación ONAC Colombia" 
                class="h-14 grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-500 cursor-pointer" 
              />
@@ -72,8 +60,18 @@ const accreditationPoints = [
              </div>
           </div>
         </div>
-
       </div>
     </div>
   </section>
 </template>
+
+<script setup>
+import logoOnac from '../assets/Images/logo_onac.webp'
+
+const accreditationPoints = [
+  "Cumplimiento Resolución No. 40198 de 2021",
+  "Certificado vigente 2025 - 2028",
+  "Sistemas de gestión de calidad auditados",
+  "Independencia e imparcialidad garantizada"
+];
+</script>
