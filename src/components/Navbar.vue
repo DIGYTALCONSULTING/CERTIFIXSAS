@@ -25,6 +25,7 @@ const navLinks = [
   { name: 'Servicios', href: '#servicios' },
   { name: 'Proceso', href: '#Proceso' },
   { name: 'Acreditación', href: '#acredita' },
+  { name: 'Certificados', href: '#certificados' },
   { name: 'Contacto', href: '#contacto' }
 ]
 
