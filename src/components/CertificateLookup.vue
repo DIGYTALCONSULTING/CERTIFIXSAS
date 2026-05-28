@@ -1,22 +1,56 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { Download, FileCheck2, LoaderCircle, Search, ShieldCheck } from 'lucide-vue-next'
+import { Download, FileCheck2, FileText, LoaderCircle, Search, ShieldCheck } from 'lucide-vue-next'
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbwLRmklCmmJuh949gt4u4yWQiLGKxYM8zEREIKlHK6z3a6DLXhLYYfmrU7TP_NvuOoQ/exec'
+const API_URL = 'https://script.google.com/macros/s/AKfycbxLFJmQtKCRnazRRy9NdLb0Zplxg_VbfZKJnCcS6dbOpPRqS2IKsJRHLrafz-8byA3y/exec'
 
 const searchTerm = ref('')
 const isLoading = ref(false)
-const results = ref([])
+const certificate = ref(null)
 const errorMessage = ref('')
 
 const normalizedSearch = computed(() => searchTerm.value.trim())
+const hasCertificatePdf = computed(() => Boolean(certificate.value?.certificado_url))
+const hasReportPdf = computed(() => Boolean(certificate.value?.informe_url))
+const documentLinks = computed(() => {
+  if (!certificate.value) return []
+
+  return [
+    {
+      label: 'Certificado',
+      description: 'Documento oficial de inspección',
+      url: certificate.value.certificado_url,
+      icon: Download,
+      className: 'bg-[#b89344] hover:bg-[#9d7b31]',
+    },
+    {
+      label: 'Informe técnico',
+      description: 'Soporte técnico asociado',
+      url: certificate.value.informe_url,
+      icon: FileText,
+      className: 'bg-teal-700 hover:bg-[#0f2a2d]',
+    },
+  ].filter((document) => Boolean(document.url))
+    .map((document) => ({
+      ...document,
+      url: getDriveDownloadUrl(document.url),
+    }))
+})
+
+function getDriveDownloadUrl(url) {
+  const fileId = String(url).match(/\/d\/([^/]+)/)?.[1]
+
+  if (!fileId) return url
+
+  return `https://drive.google.com/uc?export=download&id=${fileId}`
+}
 
 const lookupCertificate = async () => {
-  results.value = []
+  certificate.value = null
   errorMessage.value = ''
 
   if (!normalizedSearch.value) {
-    errorMessage.value = 'Ingresa el nombre de la empresa o del certificado para realizar la consulta.'
+    errorMessage.value = 'Ingresa el número del certificado para realizar la consulta.'
     return
   }
 
@@ -24,7 +58,7 @@ const lookupCertificate = async () => {
 
   try {
     const searchParam = encodeURIComponent(normalizedSearch.value)
-    const response = await fetch(`${API_URL}?q=${searchParam}&cert=${searchParam}`)
+    const response = await fetch(`${API_URL}?certificado=${searchParam}`)
 
     if (!response.ok) {
       throw new Error('No fue posible consultar el certificado.')
@@ -33,11 +67,11 @@ const lookupCertificate = async () => {
     const data = await response.json()
 
     if (!data.ok) {
-      errorMessage.value = data.message || 'No encontramos certificados con ese nombre.'
+      errorMessage.value = data.message || 'No encontramos un certificado con ese número.'
       return
     }
 
-    results.value = data.results || []
+    certificate.value = data.certificate
   } catch (error) {
     errorMessage.value = 'No pudimos consultar en este momento. Intenta nuevamente.'
   } finally {
@@ -68,8 +102,8 @@ const lookupCertificate = async () => {
               Consulta tu certificado
             </h2>
             <p class="text-lg text-gray-600 leading-relaxed text-justify">
-              Ingresa el nombre de la empresa o una parte del nombre del certificado emitido por
-              CERTIFIX S.A.S para validar su disponibilidad y descargar el documento en PDF.
+              Ingresa el número del certificado emitido por CERTIFIX S.A.S para validar su estado
+              y descargar el certificado junto con el informe técnico asociado.
             </p>
           </div>
 
@@ -89,7 +123,7 @@ const lookupCertificate = async () => {
           <form @submit.prevent="lookupCertificate" class="space-y-5">
             <div>
               <label for="certificate-number" class="block text-sm font-bold text-[#0f2a2d] mb-2">
-                Nombre de empresa o certificado
+                Número de certificado
               </label>
               <div class="relative">
                 <input
@@ -98,7 +132,7 @@ const lookupCertificate = async () => {
                   type="text"
                   inputmode="text"
                   autocomplete="off"
-                  placeholder="Ej: EDS DEL CAFE"
+                  placeholder="Ej: CERT-2026-001"
                   class="w-full bg-white border border-gray-200 rounded-xl px-5 py-4 pr-12 text-base font-semibold text-[#0f2a2d] uppercase focus:ring-2 focus:ring-teal-500 outline-none shadow-sm"
                   :disabled="isLoading"
                 />
@@ -129,42 +163,75 @@ const lookupCertificate = async () => {
           </div>
 
           <div
-            v-if="results.length"
+            v-if="certificate"
             class="mt-6 space-y-4"
             aria-live="polite"
           >
             <p class="text-sm font-bold text-teal-700">
-              {{ results.length === 1 ? 'Certificado encontrado' : `${results.length} certificados encontrados` }}
+              Certificado encontrado
             </p>
 
             <article
-              v-for="certificate in results"
-              :key="certificate.file_id"
               class="rounded-2xl border border-teal-100 bg-white p-5 sm:p-6 shadow-sm"
             >
-              <div class="flex items-start gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
-                  <FileCheck2 class="w-6 h-6" aria-hidden="true" />
-                </div>
+              <div class="flex flex-col items-center text-center">
                 <div class="min-w-0">
                   <p class="text-xs font-bold uppercase tracking-widest text-teal-600">
-                    PDF disponible
+                    {{ certificate.estado }}
                   </p>
                   <h3 class="text-lg sm:text-xl font-extrabold text-[#0f2a2d] wrap-break-word">
-                    {{ certificate.file_name }}
+                    {{ certificate.numero_certificado }}
                   </h3>
+                  <p class="text-sm font-semibold text-gray-500 mt-1">
+                    {{ certificate.estacion }}
+                  </p>
                 </div>
               </div>
 
-              <a
-                :href="certificate.download_url"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="mt-5 w-full inline-flex items-center justify-center gap-3 bg-[#b89344] hover:bg-[#9d7b31] text-white font-bold py-4 rounded-xl transition-all shadow-lg"
-              >
-                <Download class="w-5 h-5" aria-hidden="true" />
-                <span>Descargar PDF</span>
-              </a>
+              <div class="mt-5 grid sm:grid-cols-2 gap-3">
+                <a
+                  v-for="document in documentLinks"
+                  :key="document.label"
+                  :href="document.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-full flex items-center gap-4 text-white p-4 rounded-2xl transition-all shadow-lg hover:-translate-y-1"
+                  :class="document.className"
+                >
+                  <span class="w-12 h-12 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
+                    <component :is="document.icon" class="w-6 h-6" aria-hidden="true" />
+                  </span>
+                  <span class="min-w-0 text-left">
+                    <span class="block font-extrabold">{{ document.label }}</span>
+                    <span class="block text-xs font-semibold text-white/80">{{ document.description }}</span>
+                  </span>
+                </a>
+
+                <div
+                  v-if="!hasCertificatePdf"
+                  class="w-full flex items-center gap-4 bg-gray-100 text-gray-400 p-4 rounded-2xl border border-gray-200"
+                >
+                  <span class="w-12 h-12 rounded-xl bg-white flex items-center justify-center shrink-0">
+                    <Download class="w-6 h-6" aria-hidden="true" />
+                  </span>
+                  <span class="min-w-0 text-left">
+                    <span class="block font-extrabold">Certificado</span>
+                    <span class="block text-xs font-semibold">No disponible</span>
+                  </span>
+                </div>
+                <div
+                  v-if="!hasReportPdf"
+                  class="w-full flex items-center gap-4 bg-gray-100 text-gray-400 p-4 rounded-2xl border border-gray-200"
+                >
+                  <span class="w-12 h-12 rounded-xl bg-white flex items-center justify-center shrink-0">
+                    <FileText class="w-6 h-6" aria-hidden="true" />
+                  </span>
+                  <span class="min-w-0 text-left">
+                    <span class="block font-extrabold">Informe técnico</span>
+                    <span class="block text-xs font-semibold">No disponible</span>
+                  </span>
+                </div>
+              </div>
             </article>
           </div>
         </div>
