@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 
 const STORAGE_KEY = 'certifix-service-reviews'
-const REVIEWS_API_URL = import.meta.env.VITE_REVIEWS_API_URL
+const REVIEWS_API_URL = import.meta.env.VITE_REVIEWS_API_URL || 'https://script.google.com/macros/s/AKfycbzxp9mgN52e4-jMwaXr8d5cjlHuqHDqA-rIEE3uVeECdoJz19hQxwVgenBD61Wf9-De/exec'
 const defaultStationName = 'EDS Certifix'
 
 const stationName = ref('')
