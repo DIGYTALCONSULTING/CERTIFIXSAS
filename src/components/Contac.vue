@@ -86,7 +86,6 @@ const socialIcons = [
           </h3>
           <p class="text-lg text-gray-600 mb-12 text-justify">
             Nuestro equipo está listo para brindarle una asesoría técnica personalizada.
-            No deje la seguridad de su planta al azar.
           </p>
 
           <div class="space-y-8">
