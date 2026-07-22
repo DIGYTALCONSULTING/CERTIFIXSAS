@@ -37,7 +37,7 @@ const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text
         
         <p class="text-xl md:text-xl text-white mb-10 leading-relaxed font-light md:text-justify">
           Expertos en pruebas de hermeticidad en tanques y tuberías en plantas de abastecimiento para combustibles con instalación fija y tanques de almacenamiento de consumidor final, que sean nuevos o existentes que almacenan combustible líquidos y/o combustibles crudos y o combustibles líquidos  derivados del petróleo y sus mezclas de los mismos con biocombustibles, excepto GLP
-          Bajo la normatividad NTC 102, Resolución 40198 de 2021, ISO/IEC 17020:2012 y NFPA 30
+          Bajo la normatividad NTC 102, Resolución 17020 de 2021, ISO/IEC 17020:2012 y NFPA 30
         </p>  
         
         <div class="flex flex-col sm:flex-row items-center gap-4">
