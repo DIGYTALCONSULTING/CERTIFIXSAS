@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { Download, FileCheck2, FileText, LoaderCircle, Search, ShieldCheck } from 'lucide-vue-next'
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbxLFJmQtKCRnazRRy9NdLb0Zplxg_VbfZKJnCcS6dbOpPRqS2IKsJRHLrafz-8byA3y/exec'
+const API_URL = 'https://script.google.com/macros/s/AKfycbzwZvvFItukfbPEirdKmIMZqR4R6h7Yzqq3Q91rsW78oWh00BRcPU_A542TznSoBAUrpg/exec'
 
 const searchTerm = ref('')
 const isLoading = ref(false)
