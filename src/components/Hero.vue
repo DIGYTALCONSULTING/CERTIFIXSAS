@@ -41,7 +41,7 @@ const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text
         
         <p class="text-xl md:text-xl text-white mb-10 leading-relaxed font-light md:text-justify">
           CERTIFIX S.A.S realiza pruebas de hermeticidad en tanques y tuberías para estaciones de servicio,
-          plantas de abastecimiento e instalaciones fijas de almacenamiento de combustibles líquidos en Colombia.
+          en Colombia.
           Emitimos informes y certificados técnicos bajo criterios de inspección ISO/IEC 17020:2012,
           Resolución 40198 de 2021, NTC aplicables y NFPA 30.
         </p>  
