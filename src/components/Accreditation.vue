@@ -33,7 +33,7 @@
             </li>
           </ul>
 
-          <div class="pt-6 flex items-center gap-6">
+          <div class="inline-flex max-w-full items-center gap-4 rounded-2xl border border-teal-100 bg-teal-50/60 px-5 py-4 shadow-sm">
              <img 
                :src="logoOnac" 
                alt="Acreditación ONAC Colombia" 
@@ -41,10 +41,10 @@
                height="1024"
                loading="lazy"
                decoding="async"
-               class="h-14 grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-500 cursor-pointer" 
+               class="h-10 w-auto max-w-[132px] object-contain grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-500" 
              />
-             <div class="h-12 w-px bg-gray-200"></div>
-             <p class="text-[10px] text-gray-400 uppercase tracking-widest leading-tight">
+             <div class="h-10 w-px bg-teal-100"></div>
+             <p class="text-[10px] text-gray-500 uppercase tracking-widest leading-tight">
                Organismo Nacional de<br/>Acreditación de Colombia
              </p>
           </div>
