@@ -15,7 +15,7 @@ const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text
     <div class="absolute inset-0">
       <img 
         :src="imagenHero" 
-        alt="Infraestructura de inspección de tanques" 
+        alt="Pruebas de hermeticidad en tanques de combustible" 
         width="1536"
         height="1024"
         fetchpriority="high"
@@ -36,12 +36,14 @@ const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text
         </div>
         
         <h1 class="text-4xl md:text-7xl font-extrabold text-white leading-tight mb-5">
-          Seguridad y Hermeticidad <span class="text-teal-400">Garantizada</span>
+          Pruebas de Hermeticidad en <span class="text-teal-400">Tanques y Tuberías</span>
         </h1>
         
         <p class="text-xl md:text-xl text-white mb-10 leading-relaxed font-light md:text-justify">
-          Expertos en pruebas de hermeticidad en tanques y tuberías en plantas de abastecimiento para combustibles con instalación fija y tanques de almacenamiento de consumidor final, que sean nuevos o existentes que almacenan combustible líquidos y/o combustibles crudos y o combustibles líquidos  derivados del petróleo y sus mezclas de los mismos con biocombustibles, excepto GLP
-          Bajo la normatividad NTC 102, Resolución 17020 de 2021, ISO/IEC 17020:2012 y NFPA 30
+          CERTIFIX S.A.S realiza pruebas de hermeticidad en tanques y tuberías para estaciones de servicio,
+          plantas de abastecimiento e instalaciones fijas de almacenamiento de combustibles líquidos en Colombia.
+          Emitimos informes y certificados técnicos bajo criterios de inspección ISO/IEC 17020:2012,
+          Resolución 40198 de 2021, NTC aplicables y NFPA 30.
         </p>  
         
         <div class="flex flex-col sm:flex-row items-center gap-4">
@@ -61,7 +63,7 @@ const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text
           </div>
           <div>
             <p class="text-white font-bold text-lg">+350 Proyectos</p>
-            <p class="text-teal-300/80 text-sm uppercase tracking-wide pb-12">Clientes satisfechos en Colombia</p>
+            <p class="text-teal-300/80 text-sm uppercase tracking-wide pb-12">Pruebas de hermeticidad en Colombia</p>
           </div>
         </div>
       </div>

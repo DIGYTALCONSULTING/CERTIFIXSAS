@@ -21,7 +21,7 @@
           </h2>
 
           <p class="text-lg text-gray-600 leading-relaxed text-justify">
-            Contamos con el aval de la <strong class="text-[#0f2a2d]">ONAC (Organismo Nacional de Acreditación de Colombia)</strong> bajo el código 24-OIN-037. Esta certificación nos faculta para realizar inspecciones críticas legalmente vinculantes.
+            Contamos con el aval de la <strong class="text-[#0f2a2d]">ONAC (Organismo Nacional de Acreditación de Colombia)</strong> bajo el código 24-OIN-037. Esta acreditación respalda procesos de inspección y pruebas de hermeticidad para tanques, tuberías y estaciones de servicio.
           </p>
 
           <ul class="space-y-4">
@@ -54,7 +54,7 @@
           <img 
             src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=2070&auto=format&fit=crop" 
             class="w-full h-full object-cover opacity-30" 
-            alt="Tanque industrial inspeccionado" 
+            alt="Inspección y pruebas de hermeticidad en tanque industrial" 
             loading="lazy"
             decoding="async"
             referrerpolicy="no-referrer"

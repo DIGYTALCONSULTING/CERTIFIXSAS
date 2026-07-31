@@ -7,18 +7,18 @@ import { onMounted, onBeforeUnmount } from "vue";
 const services = [
   {
     title: "Pruebas de Hermeticidad",
-    desc: "Detección de fugas en tanques y tuberías mediante tecnología avanzada de presión y vacío.",
+    desc: "Pruebas de hermeticidad en tanques y tuberías para detectar fugas, verificar integridad y respaldar la operación segura de estaciones de servicio.",
     icon: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>`
   },
   {
-    title: "Manejo de Combustibles",
-    desc: "Cumplimiento con la resolución 148 de 2021, NTC norma técnica Colombiana 17020 y NFPA 30.",
+    title: "Estaciones de Servicio",
+    desc: "Inspección técnica para estaciones de servicio, plantas de abastecimiento y sistemas de almacenamiento de combustibles líquidos bajo requisitos normativos aplicables.",
     icon: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>`
   },
 
   {
-    title: "Certificación ONAC",
-    desc: "Expedición de informes y certificados bajo acreditación por ONAC.",
+    title: "Informes y Certificados",
+    desc: "Expedición de informes y certificados de hermeticidad para tanques y tuberías, con soporte documental para consulta y verificación.",
     icon: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m9 15 2 2 4-4"/></svg>`
   }
 ];
@@ -73,10 +73,11 @@ onBeforeUnmount(() => {
           Servicios Especializados
         </p>
         <h2 class="text-4xl md:text-5xl font-extrabold text-[#0f2a2d] mb-6">
-          Expertos en pruebas de Hermeticidad en estaciones de Servicio 
+          Expertos en pruebas de hermeticidad para tanques y tuberías
         </h2>
         <p class="text-lg text-gray-600">
-          Nuestras soluciones están diseñadas para maximizar la vida útil de sus activos industriales y garantizar cero fugas bajo normativas nacionales.
+          Nuestras soluciones ayudan a estaciones de servicio y plantas de abastecimiento a verificar fugas,
+          cumplir requisitos técnicos y conservar soportes documentales confiables.
         </p>
       </div>
 
