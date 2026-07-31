@@ -1,20 +1,43 @@
 const SHEET_NAME = 'Resenas'
 const SPREADSHEET_ID_PROPERTY = 'CERTIFIX_REVIEWS_SPREADSHEET_ID'
+const MAX_REVIEWS_RETURNED = 100
+const MAX_REVIEWS_PER_HOUR = 30
 
 function doGet() {
-  const sheet = getReviewsSheet()
-  const rows = sheet.getDataRange().getValues()
-  const reviews = rows.slice(1).map(rowToReview).filter(Boolean).reverse()
+  try {
+    const sheet = getReviewsSheet()
+    const rows = sheet.getDataRange().getValues()
+    const reviews = rows.slice(1).map(rowToReview).filter(Boolean).reverse().slice(0, MAX_REVIEWS_RETURNED)
 
-  return jsonResponse({
-    ok: true,
-    reviews,
-  })
+    return jsonResponse({
+      ok: true,
+      reviews,
+    })
+  } catch {
+    return jsonResponse({
+      ok: false,
+      reviews: [],
+      error: 'No fue posible cargar las resenas.',
+    })
+  }
 }
 
 function doPost(event) {
+  const lock = LockService.getScriptLock()
+
   try {
+    lock.waitLock(5000)
+    enforceHourlyLimit()
+
     const payload = JSON.parse(event.postData.contents || '{}')
+
+    if (payload.website) {
+      return jsonResponse({
+        ok: false,
+        error: 'No fue posible guardar la resena.',
+      })
+    }
+
     const station = sanitizeText(payload.station, 'EDS Certifix', 80)
     const rating = Math.min(Math.max(Number(payload.rating) || 0, 1), 5)
     const text = sanitizeText(payload.text, '', 200)
@@ -49,11 +72,17 @@ function doPost(event) {
         date: displayDate,
       },
     })
-  } catch (error) {
+  } catch {
     return jsonResponse({
       ok: false,
-      error: error.message,
+      error: 'No fue posible guardar la resena.',
     })
+  } finally {
+    try {
+      lock.releaseLock()
+    } catch {
+      // The lock may not have been acquired if Apps Script failed early.
+    }
   }
 }
 
@@ -101,8 +130,22 @@ function rowToReview(row) {
 }
 
 function sanitizeText(value, fallback, maxLength) {
-  const text = String(value || fallback).trim()
+  const text = String(value || fallback)
+    .replace(/[\u0000-\u001f\u007f]/g, '')
+    .trim()
   return text.slice(0, maxLength)
+}
+
+function enforceHourlyLimit() {
+  const cache = CacheService.getScriptCache()
+  const key = `review-limit-${Utilities.formatDate(new Date(), 'America/Bogota', 'yyyyMMddHH')}`
+  const currentCount = Number(cache.get(key) || '0')
+
+  if (currentCount >= MAX_REVIEWS_PER_HOUR) {
+    throw new Error('Rate limit exceeded')
+  }
+
+  cache.put(key, String(currentCount + 1), 3600)
 }
 
 function formatDate(date) {

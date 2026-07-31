@@ -1,132 +1,96 @@
-const CERTIFICATES_FOLDER_ID = '1oiFLPnQhdudY3UzS1Bf4vi3fk3kcQc_A'
-const MAX_RESULTS = 10
-const MIN_SCORE = 25
+const SHEET_NAME = 'Hoja 1'
+const SPREADSHEET_ID_PROPERTY = 'CERTIFIX_CERTIFICATES_SPREADSHEET_ID'
+const MAX_QUERY_LENGTH = 40
 
-function doGet(e) {
-  const query = normalizeText(e.parameter.q || e.parameter.cert || '')
+function doGet(event) {
+  try {
+    const certificateNumber = normalizeText(event.parameter.certificado || event.parameter.q || '')
 
-  if (!query) {
-    return jsonResponse({
-      ok: false,
-      message: 'Debes ingresar el nombre de la empresa o del certificado.'
-    })
-  }
-
-  const folder = DriveApp.getFolderById(CERTIFICATES_FOLDER_ID)
-  const files = folder.getFilesByType(MimeType.PDF)
-  const results = []
-
-  while (files.hasNext()) {
-    const file = files.next()
-    const fileName = file.getName()
-    const searchableName = normalizeText(fileName.replace(/\.pdf$/i, ''))
-    const score = getMatchScore(query, searchableName)
-
-    if (score >= MIN_SCORE) {
-      const fileId = file.getId()
-
-      results.push({
-        file_id: fileId,
-        file_name: fileName,
-        score,
-        download_url: `https://drive.google.com/uc?export=download&id=${fileId}`,
-        view_url: `https://drive.google.com/file/d/${fileId}/view`
+    if (!certificateNumber || certificateNumber.length > MAX_QUERY_LENGTH) {
+      return jsonResponse({
+        ok: false,
+        message: 'Debes ingresar el numero del certificado.',
       })
     }
-  }
 
-  if (!results.length) {
+    const sheet = getCertificatesSheet()
+    const rows = sheet.getDataRange().getValues()
+    const headers = rows[0]
+    const certificates = rows.slice(1).map((row) => rowToCertificate(headers, row)).filter(Boolean)
+
+    const result = certificates.find((certificate) => {
+      return normalizeText(certificate.numero_certificado) === certificateNumber
+    })
+
+    if (!result) {
+      return jsonResponse({
+        ok: false,
+        message: 'No encontramos un certificado con ese numero.',
+      })
+    }
+
+    if (normalizeText(result.estado) !== 'vigente') {
+      return jsonResponse({
+        ok: false,
+        message: 'El certificado existe, pero no se encuentra vigente para consulta publica.',
+      })
+    }
+
+    return jsonResponse({
+      ok: true,
+      certificate: result,
+    })
+  } catch {
     return jsonResponse({
       ok: false,
-      message: 'No encontramos certificados con ese nombre.'
+      message: 'No fue posible consultar el certificado en este momento.',
     })
   }
-
-  return jsonResponse({
-    ok: true,
-    total: results.length,
-    results: results
-      .sort((a, b) => b.score - a.score || a.file_name.localeCompare(b.file_name))
-      .slice(0, MAX_RESULTS)
-  })
 }
 
-function getMatchScore(query, fileName) {
-  if (fileName === query) return 100
-  if (fileName.includes(query)) return 90
-  if (query.includes(fileName)) return 85
+function getCertificatesSheet() {
+  const spreadsheetId = PropertiesService.getScriptProperties().getProperty(SPREADSHEET_ID_PROPERTY)
 
-  const queryWords = uniqueWords(query)
-  const fileWords = uniqueWords(fileName)
+  if (!spreadsheetId) {
+    throw new Error('Missing spreadsheet id')
+  }
 
-  if (!queryWords.length || !fileWords.length) return 0
+  const spreadsheet = SpreadsheetApp.openById(spreadsheetId)
+  return spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.getSheets()[0]
+}
 
-  let exactWordMatches = 0
-  let partialWordMatches = 0
+function rowToCertificate(headers, row) {
+  const data = {}
 
-  queryWords.forEach(queryWord => {
-    if (fileWords.includes(queryWord)) {
-      exactWordMatches += 1
-      return
-    }
-
-    if (fileWords.some(fileWord => fileWord.includes(queryWord) || queryWord.includes(fileWord))) {
-      partialWordMatches += 1
-    }
+  headers.forEach((header, index) => {
+    data[String(header).trim()] = row[index]
   })
 
-  const wordCoverage = ((exactWordMatches + partialWordMatches * 0.65) / queryWords.length) * 70
-  const similarity = getSimilarity(query, fileName) * 30
+  if (!data.numero_certificado) return null
 
-  return Math.round(wordCoverage + similarity)
-}
-
-function uniqueWords(value) {
-  return normalizeText(value)
-    .split(' ')
-    .filter(word => word.length > 1 && !isStopWord(word))
-    .filter((word, index, words) => words.indexOf(word) === index)
-}
-
-function isStopWord(word) {
-  return ['de', 'del', 'la', 'las', 'el', 'los', 'y', 'en', 'para', 'por', 'certificado', 'inspeccion'].includes(word)
-}
-
-function getSimilarity(a, b) {
-  const distance = levenshteinDistance(a, b)
-  const longest = Math.max(a.length, b.length)
-
-  if (!longest) return 1
-
-  return 1 - distance / longest
-}
-
-function levenshteinDistance(a, b) {
-  const matrix = []
-
-  for (let i = 0; i <= b.length; i += 1) {
-    matrix[i] = [i]
+  return {
+    numero_certificado: sanitizeText(data.numero_certificado, 40),
+    estacion: sanitizeText(data.estacion, 100),
+    certificado_url: sanitizeUrl(data.certificado_url),
+    informe_url: sanitizeUrl(data.informe_url),
+    estado: sanitizeText(data.estado, 40),
   }
+}
 
-  for (let j = 0; j <= a.length; j += 1) {
-    matrix[0][j] = j
-  }
+function sanitizeText(value, maxLength) {
+  return String(value || '')
+    .replace(/[\u0000-\u001f\u007f]/g, '')
+    .trim()
+    .slice(0, maxLength)
+}
 
-  for (let i = 1; i <= b.length; i += 1) {
-    for (let j = 1; j <= a.length; j += 1) {
-      if (b.charAt(i - 1) === a.charAt(j - 1)) {
-        matrix[i][j] = matrix[i - 1][j - 1]
-      } else {
-        matrix[i][j] = Math.min(
-          matrix[i - 1][j - 1] + 1,
-          matrix[i][j - 1] + 1,
-          matrix[i - 1][j] + 1
-        )
-      }
-    }
-  }
+function sanitizeUrl(value) {
+  const url = sanitizeText(value, 500)
 
-  return matrix[b.length][a.length]
+  if (!url) return ''
+  if (!/^https:\/\/drive\.google\.com\/file\/d\/[^/]+\/view/i.test(url)) return ''
+
+  return url
 }
 
 function normalizeText(value) {
@@ -135,12 +99,11 @@ function normalizeText(value) {
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[_-]+/g, ' ')
-    .replace(/\s+/g, ' ')
+    .replace(/\s+/g, '')
 }
 
-function jsonResponse(data) {
+function jsonResponse(payload) {
   return ContentService
-    .createTextOutput(JSON.stringify(data))
+    .createTextOutput(JSON.stringify(payload))
     .setMimeType(ContentService.MimeType.JSON)
 }

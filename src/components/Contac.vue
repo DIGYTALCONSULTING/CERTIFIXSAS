@@ -39,7 +39,6 @@ const handleSubmit = () => {
   }
   
   policyError.value = false;
-  console.log('Formulario enviado:', formData.value);
   alert('Gracias por contactarnos. Pronto nos comunicaremos con usted.');
 };
 
@@ -80,10 +79,10 @@ const socialIcons = [
       <div class="grid lg:grid-cols-2 gap-20">
 
         <div>
-          <h2 class="text-teal-600 font-bold uppercase tracking-widest text-sm mb-4">Hablemos hoy</h2>
-          <h3 class="text-4xl md:text-5xl font-extrabold text-[#0f2a2d] mb-8">
+          <p class="text-teal-600 font-bold uppercase tracking-widest text-sm mb-4">Hablemos hoy</p>
+          <h2 class="text-4xl md:text-5xl font-extrabold text-[#0f2a2d] mb-8">
             ¿Listo para asegurar su infraestructura?
-          </h3>
+          </h2>
           <p class="text-lg text-gray-600 mb-12 text-justify">
             Nuestro equipo está listo para brindarle una asesoría técnica personalizada.
           </p>
@@ -130,33 +129,33 @@ const socialIcons = [
             <div class="grid md:grid-cols-2 gap-6">
               <div>
                 <label class="block text-sm font-bold text-[#0f2a2d] mb-2">Nombre Completo</label>
-                <input v-model="formData.nombre" required class="w-full bg-white border border-gray-200 rounded-xl px-5 py-4 focus:ring-2 focus:ring-teal-500 outline-none shadow-sm" />
+                <input v-model="formData.nombre" required maxlength="80" autocomplete="name" class="w-full bg-white border border-gray-200 rounded-xl px-5 py-4 focus:ring-2 focus:ring-teal-500 outline-none shadow-sm" />
               </div>
               <div>
                 <label class="block text-sm font-bold text-[#0f2a2d] mb-2">Empresa</label>
-                <input v-model="formData.empresa" class="w-full bg-white border border-gray-200 rounded-xl px-5 py-4 focus:ring-2 focus:ring-teal-500 outline-none shadow-sm" />
+                <input v-model="formData.empresa" maxlength="100" autocomplete="organization" class="w-full bg-white border border-gray-200 rounded-xl px-5 py-4 focus:ring-2 focus:ring-teal-500 outline-none shadow-sm" />
               </div>
             </div>
 
             <div class="grid md:grid-cols-2 gap-6">
               <div>
                 <label class="block text-sm font-bold text-[#0f2a2d] mb-2">Ciudad</label>
-                <input v-model="formData.ciudad" required class="w-full bg-white border border-gray-200 rounded-xl px-5 py-4 focus:ring-2 focus:ring-teal-500 outline-none shadow-sm" />
+                <input v-model="formData.ciudad" required maxlength="80" autocomplete="address-level2" class="w-full bg-white border border-gray-200 rounded-xl px-5 py-4 focus:ring-2 focus:ring-teal-500 outline-none shadow-sm" />
               </div>
               <div>
                 <label class="block text-sm font-bold text-[#0f2a2d] mb-2">Teléfono Celular</label>
-                <input v-model="formData.celular" type="tel" required class="w-full bg-white border border-gray-200 rounded-xl px-5 py-4 focus:ring-2 focus:ring-teal-500 outline-none shadow-sm" />
+                <input v-model="formData.celular" type="tel" required maxlength="30" autocomplete="tel" class="w-full bg-white border border-gray-200 rounded-xl px-5 py-4 focus:ring-2 focus:ring-teal-500 outline-none shadow-sm" />
               </div>
             </div>
 
             <div>
               <label class="block text-sm font-bold text-[#0f2a2d] mb-2">Correo Electrónico</label>
-              <input v-model="formData.email" type="email" required class="w-full bg-white border border-gray-200 rounded-xl px-5 py-4 focus:ring-2 focus:ring-teal-500 outline-none shadow-sm" />
+              <input v-model="formData.email" type="email" required maxlength="120" autocomplete="email" class="w-full bg-white border border-gray-200 rounded-xl px-5 py-4 focus:ring-2 focus:ring-teal-500 outline-none shadow-sm" />
             </div>
 
             <div>
               <label class="block text-sm font-bold text-[#0f2a2d] mb-2">Mensaje / Requerimiento</label>
-              <textarea v-model="formData.mensaje" rows="4" required class="w-full bg-white border border-gray-200 rounded-xl px-5 py-4 focus:ring-2 focus:ring-teal-500 outline-none resize-none shadow-sm"></textarea>
+              <textarea v-model="formData.mensaje" rows="4" required maxlength="500" class="w-full bg-white border border-gray-200 rounded-xl px-5 py-4 focus:ring-2 focus:ring-teal-500 outline-none resize-none shadow-sm"></textarea>
             </div>
 
             <div class="space-y-2">

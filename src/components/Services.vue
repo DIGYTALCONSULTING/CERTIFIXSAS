@@ -69,12 +69,12 @@ onBeforeUnmount(() => {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-teal-600 font-bold uppercase tracking-widest text-sm mb-4">
+        <p class="text-teal-600 font-bold uppercase tracking-widest text-sm mb-4">
           Servicios Especializados
-        </h2>
-        <h3 class="text-4xl md:text-5xl font-extrabold text-[#0f2a2d] mb-6">
+        </p>
+        <h2 class="text-4xl md:text-5xl font-extrabold text-[#0f2a2d] mb-6">
           Expertos en pruebas de Hermeticidad en estaciones de Servicio 
-        </h3>
+        </h2>
         <p class="text-lg text-gray-600">
           Nuestras soluciones están diseñadas para maximizar la vida útil de sus activos industriales y garantizar cero fugas bajo normativas nacionales.
         </p>
@@ -95,9 +95,9 @@ onBeforeUnmount(() => {
             v-html="service.icon"
           />
 
-          <h4 class="text-2xl font-bold text-[#0f2a2d] mb-4 transition-colors duration-300 group-hover:text-white">
+          <h3 class="text-2xl font-bold text-[#0f2a2d] mb-4 transition-colors duration-300 group-hover:text-white">
             {{ service.title }}
-          </h4>
+          </h3>
 
           <p class="text-gray-600 leading-relaxed transition-colors duration-300 group-hover:text-teal-100/80">
             {{ service.desc }}

@@ -63,6 +63,9 @@ const closeMenu = () => {
             <img
               :src="logoHero"
               alt="Certifix S.A.S Logo"
+              width="1024"
+              height="1024"
+              decoding="async"
               class="h-23 w-auto object-contain transition-transform duration-300 hover:scale-105"
             />
           </a>

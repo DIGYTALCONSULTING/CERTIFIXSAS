@@ -4,10 +4,12 @@ import { computed, onMounted, ref } from 'vue'
 const STORAGE_KEY = 'certifix-service-reviews'
 const REVIEWS_API_URL = import.meta.env.VITE_REVIEWS_API_URL || 'https://script.google.com/macros/s/AKfycbzNxVUzvSh5aXxqk85KK0-3wr6G_lC4n_9Eiw_GRJ9EazlGCF1HzTpXLVcbPsYkAgKX/exec'
 const defaultStationName = 'EDS Certifix'
+const REQUEST_TIMEOUT_MS = 12000
 
 const stationName = ref('')
 const rating = ref(0)
 const reviewText = ref('')
+const website = ref('')
 const reviews = ref([])
 const ratingError = ref(false)
 const reviewSaved = ref(false)
@@ -43,7 +45,13 @@ async function loadReviews() {
     isLoadingReviews.value = true
 
     try {
-      const response = await fetch(REVIEWS_API_URL)
+      const controller = new AbortController()
+      const timeoutId = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
+      const response = await fetch(REVIEWS_API_URL, {
+        signal: controller.signal,
+      })
+
+      window.clearTimeout(timeoutId)
 
       if (!response.ok) throw new Error('No fue posible cargar las reseñas.')
 
@@ -92,6 +100,7 @@ async function submitReview() {
     station: stationName.value.trim() || defaultStationName,
     rating: rating.value,
     text: reviewText.value.trim(),
+    website: website.value,
     date: new Date().toLocaleDateString('es-CO', {
       day: '2-digit',
       month: 'short',
@@ -101,6 +110,9 @@ async function submitReview() {
 
   isSavingReview.value = true
 
+  const controller = new AbortController()
+  const timeoutId = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
+
   try {
     if (REVIEWS_API_URL) {
       const response = await fetch(REVIEWS_API_URL, {
@@ -109,6 +121,7 @@ async function submitReview() {
           'Content-Type': 'text/plain;charset=utf-8',
         },
         body: JSON.stringify(newReview),
+        signal: controller.signal,
       })
 
       if (!response.ok) throw new Error('No fue posible guardar la reseña.')
@@ -122,12 +135,14 @@ async function submitReview() {
     reviewError.value = 'No pudimos guardar la reseña en línea. Intente nuevamente.'
     return
   } finally {
+    window.clearTimeout(timeoutId)
     isSavingReview.value = false
   }
 
   stationName.value = ''
   rating.value = 0
   reviewText.value = ''
+  website.value = ''
   ratingError.value = false
   reviewSaved.value = true
 }
@@ -175,6 +190,17 @@ onMounted(loadReviews)
 
         <div class="bg-gray-50 rounded-[2.5rem] p-8 md:p-12 shadow-xl border border-gray-100">
           <form @submit.prevent="submitReview" class="space-y-6">
+            <div class="hidden" aria-hidden="true">
+              <label for="review-website">Sitio web</label>
+              <input
+                id="review-website"
+                v-model="website"
+                type="text"
+                tabindex="-1"
+                autocomplete="off"
+              />
+            </div>
+
             <div>
               <label class="block text-sm font-bold text-[#0f2a2d] mb-2">
                 Nombre de estación de servicio
@@ -183,6 +209,7 @@ onMounted(loadReviews)
                 v-model="stationName"
                 type="text"
                 placeholder="Ej: EDS Principal"
+                maxlength="80"
                 class="w-full bg-white border border-gray-200 rounded-xl px-5 py-4 focus:ring-2 focus:ring-teal-500 outline-none shadow-sm"
               />
               <p class="text-xs text-gray-400 mt-2">

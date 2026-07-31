@@ -90,6 +90,10 @@ const legalLinks = [
       <img
         :src="logoDigytal"
         alt="Digytal Consulting"
+        width="64"
+        height="16"
+        loading="lazy"
+        decoding="async"
         class="h-4 opacity-70"
       />
       <span>

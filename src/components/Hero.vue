@@ -1,5 +1,5 @@
 <script setup>
-import imagenHero from '@/assets/Images/hero_tanque_rbg.png'
+import imagenHero from '@/assets/Images/hero_tanque_rbg.webp'
 const whatsappNumber = '573235909225' // 🔴 número real, sin +
 const whatsappMessage = encodeURIComponent(
   'Hola, quiero recibir información para poder agendar una cotización'
@@ -16,6 +16,10 @@ const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text
       <img 
         :src="imagenHero" 
         alt="Infraestructura de inspección de tanques" 
+        width="1536"
+        height="1024"
+        fetchpriority="high"
+        decoding="async"
         class="w-full h-full object-cover opacity-40"
       />
       <div class="absolute inset-0 bg-gradient-to-r from-teal-950 via-teal-900/60 to-transparent"></div>
@@ -53,7 +57,7 @@ const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text
 
         <div class="mt-16 flex items-center gap-8 border-t border-white/10 pt-8">
           <div class="flex -space-x-4">
-            <img v-for="i in 4" :key="i" :src="`https://i.pravatar.cc/150?u=${i}`" class="w-12 h-12 rounded-full border-2 border-teal-900" alt="Avatar cliente" />
+            <img v-for="i in 4" :key="i" :src="`https://i.pravatar.cc/150?u=${i}`" class="w-12 h-12 rounded-full border-2 border-teal-900" alt="Avatar cliente" width="48" height="48" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
           </div>
           <div>
             <p class="text-white font-bold text-lg">+350 Proyectos</p>

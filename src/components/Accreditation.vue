@@ -13,7 +13,7 @@
                 <circle cx="12" cy="8" r="6"/>
               </svg>
             </div>
-            <h3 class="text-xl md:text-2xl font-bold text-[#0f2a2d]">Acreditación ISO/IEC 17020:2012</h3>
+            <p class="text-xl md:text-2xl font-bold text-[#0f2a2d]">Acreditación ISO/IEC 17020:2012</p>
           </div>
 
           <h2 id="accreditation-title" class="text-4xl font-extrabold text-gray-900 leading-tight">
@@ -37,6 +37,10 @@
              <img 
                :src="logoOnac" 
                alt="Acreditación ONAC Colombia" 
+               width="1024"
+               height="1024"
+               loading="lazy"
+               decoding="async"
                class="h-14 grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-500 cursor-pointer" 
              />
              <div class="h-12 w-px bg-gray-200"></div>
@@ -51,6 +55,9 @@
             src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=2070&auto=format&fit=crop" 
             class="w-full h-full object-cover opacity-30" 
             alt="Tanque industrial inspeccionado" 
+            loading="lazy"
+            decoding="async"
+            referrerpolicy="no-referrer"
           />
           <div class="absolute inset-0 flex items-center justify-center p-8 md:p-12">
              <div class="bg-white/5 backdrop-blur-2xl border border-white/20 p-10 rounded-[2.5rem] text-white text-center shadow-2xl">

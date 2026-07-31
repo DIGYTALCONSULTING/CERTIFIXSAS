@@ -2,7 +2,8 @@
 import { computed, ref } from 'vue'
 import { Download, FileCheck2, FileText, LoaderCircle, Search, ShieldCheck } from 'lucide-vue-next'
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbzwZvvFItukfbPEirdKmIMZqR4R6h7Yzqq3Q91rsW78oWh00BRcPU_A542TznSoBAUrpg/exec'
+const API_URL = import.meta.env.VITE_CERTIFICATE_API_URL || 'https://script.google.com/macros/s/AKfycbzwZvvFItukfbPEirdKmIMZqR4R6h7Yzqq3Q91rsW78oWh00BRcPU_A542TznSoBAUrpg/exec'
+const REQUEST_TIMEOUT_MS = 12000
 
 const searchTerm = ref('')
 const isLoading = ref(false)
@@ -38,9 +39,9 @@ const documentLinks = computed(() => {
 })
 
 function getDriveDownloadUrl(url) {
-  const fileId = String(url).match(/\/d\/([^/]+)/)?.[1]
+  const fileId = String(url).match(/^https:\/\/drive\.google\.com\/file\/d\/([^/]+)\/view/i)?.[1]
 
-  if (!fileId) return url
+  if (!fileId) return ''
 
   return `https://drive.google.com/uc?export=download&id=${fileId}`
 }
@@ -56,9 +57,14 @@ const lookupCertificate = async () => {
 
   isLoading.value = true
 
+  const controller = new AbortController()
+  const timeoutId = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
+
   try {
     const searchParam = encodeURIComponent(normalizedSearch.value)
-    const response = await fetch(`${API_URL}?certificado=${searchParam}`)
+    const response = await fetch(`${API_URL}?certificado=${searchParam}`, {
+      signal: controller.signal,
+    })
 
     if (!response.ok) {
       throw new Error('No fue posible consultar el certificado.')
@@ -75,6 +81,7 @@ const lookupCertificate = async () => {
   } catch (error) {
     errorMessage.value = 'No pudimos consultar en este momento. Intenta nuevamente.'
   } finally {
+    window.clearTimeout(timeoutId)
     isLoading.value = false
   }
 }
@@ -133,6 +140,7 @@ const lookupCertificate = async () => {
                   inputmode="text"
                   autocomplete="off"
                   placeholder="Ej: CERT-2026-001"
+                  maxlength="40"
                   class="w-full bg-white border border-gray-200 rounded-xl px-5 py-4 pr-12 text-base font-semibold text-[#0f2a2d] uppercase focus:ring-2 focus:ring-teal-500 outline-none shadow-sm"
                   :disabled="isLoading"
                 />

@@ -1,0 +1,19 @@
+{
+  "name": "CERTIFIX S.A.S",
+  "short_name": "CERTIFIX",
+  "description": "Inspección y certificación de hermeticidad en tanques y tuberías para estaciones de servicio.",
+  "lang": "es-CO",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f2a2d",
+  "icons": [
+    {
+      "src": "/logo_hero.webp",
+      "sizes": "1024x1024",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -5,8 +5,7 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [vue(), tailwindcss()],
-  // ESTA LÍNEA ES LA QUE FALTA Y CORRIGE LA PANTALLA EN BLANCO:
-  base: '/CERTIFIXSAS/', 
+  base: process.env.VITE_BASE_PATH || '/CERTIFIXSAS/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
