@@ -6,13 +6,33 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
  * Conversión directa desde React
  */
 
+const baseUrl = import.meta.env.BASE_URL || '/'
+
 const steps = [
-  { title: "Evaluación", desc: "Revisión del sistema y normativa aplicable." },
-  { title: "Inspección", desc: "Verificación de tanques, tuberías y accesorios." },
-  { title: "Preparación", desc: "Aislamiento del sistema e instalación de equipos." },
-  { title: "Prueba", desc: "Medición de presión, volumen y estabilidad." },
-  { title: "Análisis", desc: "Validación técnica según normativa vigente." },
-  { title: "Informe", desc: "Documento técnico certificado y trazable." },
+  {
+    title: "Evaluación",
+    desc: "Revisión del sistema de almacenamiento de combustibles, identificación de tanques y tuberías, condiciones de operación y normativa aplicable para definir el alcance de la prueba de hermeticidad."
+  },
+  {
+    title: "Inspección",
+    desc: "Verificación técnica de tanques, tuberías, accesorios, conexiones y puntos críticos de estaciones de servicio para detectar riesgos de fuga o pérdida de contención."
+  },
+  {
+    title: "Preparación",
+    desc: "Aislamiento del sistema, control de condiciones previas e instalación de equipos de medición para ejecutar la prueba de hermeticidad con trazabilidad técnica."
+  },
+  {
+    title: "Prueba",
+    desc: "Medición de presión, volumen, estabilidad y comportamiento del sistema para validar la integridad de tanques y tuberías de combustible."
+  },
+  {
+    title: "Análisis",
+    desc: "Validación de resultados frente a criterios técnicos y normativa vigente, determinando si el sistema inspeccionado conserva condiciones adecuadas de hermeticidad."
+  },
+  {
+    title: "Informe",
+    desc: "Entrega de informe técnico y certificado de hermeticidad, con soporte documental para auditorías, consulta posterior y cumplimiento en estaciones de servicio."
+  },
 ];
 
 const sectionRef = ref(null)
@@ -162,6 +182,12 @@ onBeforeUnmount(() => {
           <span class="bg-slate-100 px-4 py-2 rounded-lg">
             NFPA 30
           </span>
+          <a
+            :href="`${baseUrl}pruebas-de-hermeticidad/`"
+            class="bg-slate-100 px-4 py-2 rounded-lg hover:text-teal-700 transition-colors"
+          >
+            Conocer más sobre pruebas de hermeticidad
+          </a>
         </div>
       </div>
 

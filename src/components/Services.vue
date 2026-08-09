@@ -1,6 +1,8 @@
 <script setup>
 import { onMounted, onBeforeUnmount } from "vue";
 
+const baseUrl = import.meta.env.BASE_URL || "/";
+
 /* ================================
    Data
 ================================ */
@@ -8,6 +10,7 @@ const services = [
   {
     title: "Pruebas de Hermeticidad",
     desc: "Pruebas de hermeticidad en tanques y tuberías para detectar fugas, verificar integridad y respaldar la operación segura de estaciones de servicio.",
+    href: `${baseUrl}pruebas-de-hermeticidad/`,
     icon: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>`
   },
   {
@@ -82,13 +85,16 @@ onBeforeUnmount(() => {
       </div>
 
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div
+        <component
+          :is="service.href ? 'a' : 'div'"
           v-for="(service, idx) in services"
           :key="idx"
+          :href="service.href"
+          :aria-label="service.href ? `Ver más sobre ${service.title}` : undefined"
           class="service-card group p-10 bg-gray-50 rounded-[2.5rem] border border-gray-100
                  cursor-pointer shadow-sm
                  transition-all duration-500 ease-out
-                 hover:bg-[#0f2a2d] hover:shadow-2xl hover:-translate-y-2"
+                 hover:bg-[#0f2a2d] hover:shadow-2xl hover:-translate-y-2 no-underline block"
           :style="`--delay:${idx * 120}ms`"
         >
           <div
@@ -103,7 +109,7 @@ onBeforeUnmount(() => {
           <p class="text-gray-600 leading-relaxed transition-colors duration-300 group-hover:text-teal-100/80">
             {{ service.desc }}
           </p>
-        </div>
+        </component>
       </div>
 
     </div>
